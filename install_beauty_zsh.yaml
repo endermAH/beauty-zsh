@@ -1,0 +1,12 @@
+---
+- name: "Install beauty zsh"
+  hosts: all
+  tasks:
+    - name: "Install zsh"
+      become: yes
+      apt:
+        name: zsh
+
+    - name: "Install Oh-My-ZSH"
+      import_role:
+        name: install_ohmyzsh

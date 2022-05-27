@@ -1,0 +1,18 @@
+---
+# User home directory, like /home/username
+ohmyzsh_home_dir: "~"
+
+# Url to Oh-My-ZSH installer script
+ohmyzsh_installer_url: "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+
+# Url to custom oh-my-zsh folder
+ohmyzsh_zsh_custom: "{{ ohmyzsh_home_dir }}/.oh-my-zsh/custom"
+
+# List of plugins to install
+ohmyzsh_plugins:
+  - name: zsh-syntax-highlighting
+    git_url: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ ohmyzsh_zsh_custom }}/plugins"
+
+# Default theme
+ohmyzsh_theme: agnoster

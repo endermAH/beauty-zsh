@@ -1,0 +1,2 @@
+[all]
+YOUR_IP_ADDRESS ansible_ssh_user="YOUR_USER_NAME" ansible_ssh_pass="YOUR_PASSWORD" ansible_become_password="YOUR_ROOT_PASSWORD"

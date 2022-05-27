@@ -1,0 +1,44 @@
+---
+- name: "Download Oh-My-Zsh installer"
+  get_url:
+    url: "{{ ohmyzsh_installer_url }}"
+    dest: "{{ ohmyzsh_home_dir }}"
+
+- name: "Make install.sh executable"
+  file:
+    path: "{{ ohmyzsh_home_dir }}/install.sh"
+    mode: "0775"
+
+- name: "Install Oh-My-Zsh"
+  shell: "{{ ohmyzsh_home_dir }}/install.sh"
+  register: install_result
+  failed_when:
+    - install_result.rc == 1
+    - not "The $ZSH folder already exists" in install_result.stdout
+  changed_when:
+    - not "The $ZSH folder already exists" in install_result.stdout
+
+- name: "Clone plugins"
+  git:
+    repo: "{{ plugin.git_url }}"
+    clone: yes
+    dest: "{{ ohmyzsh_zsh_custom }}/plugins/{{ plugin.name }}"
+  loop: "{{ ohmyzsh_plugins }}"
+  loop_control:
+    loop_var: "plugin"
+
+- name: "Enable plugins"
+  lineinfile:
+    path: "{{ ohmyzsh_home_dir }}/.zshrc"
+    regexp: "plugins="
+    line: "plugins=(git {{ ohmyzsh_plugins | map(attribute='name') | join(' ') }})"
+
+- name: "Enable theme"
+  lineinfile:
+    path: "{{ ohmyzsh_home_dir }}/.zshrc"
+    regexp: "ZSH_THEME="
+    line: "ZSH_THEME=\"{{ ohmyzsh_theme }}\""
+
+- name: "Enable zsh"
+  become: yes
+  shell: "chsh -s $(which zsh) {{ ansible_ssh_user }}"
